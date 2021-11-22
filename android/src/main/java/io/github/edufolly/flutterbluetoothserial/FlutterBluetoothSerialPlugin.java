@@ -1094,7 +1094,14 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                         break;
                     }
                     byte[] bytes1 = HexString2Bytes("AA558100000106BB66");
-                    connection.write(bytes1);
+                    AsyncTask.execute(() -> {
+                        try {
+                            connection.write(bytes1);
+                            activity.runOnUiThread(() -> result.success(null));
+                        } catch (Exception ex) {
+                            activity.runOnUiThread(() -> result.error("write_error", ex.getMessage(), exceptionToString(ex)));
+                        }
+                    });
                     result.success(null);
                     break ;
                 }

@@ -1086,6 +1086,18 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                     result.success(null);
                     break ;
                 }
+                case "weightZero" :{
+                    int id = call.argument("id");
+                    BluetoothConnection connection = connections.get(id);
+                    if (connection == null) {
+                        result.error("invalid_argument", "there is no connection with provided id", null);
+                        break;
+                    }
+                    byte[] bytes1 = HexString2Bytes("AA558100000106BB66");
+                    connection.write(bytes1);
+                    result.success(null);
+                    break ;
+                }
 
                 default:
                     result.notImplemented();

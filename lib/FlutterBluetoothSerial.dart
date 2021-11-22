@@ -37,6 +37,11 @@ class FlutterBluetoothSerial {
     return num;
   }
 
+  static Future<void> weightZero (int id) async {
+    await _methodChannel.invokeMethod("weightZero", {'id': id});
+
+  }
+
   /// Describes is the Bluetooth interface enabled on host device.
   Future<bool?> get isEnabled async =>
       await _methodChannel.invokeMethod('isEnabled');

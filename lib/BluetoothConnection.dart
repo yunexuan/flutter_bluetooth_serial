@@ -17,7 +17,7 @@ class BluetoothConnection {
   //
 
   /// This ID identifies real full `BluetoothConenction` object on platform side code.
-  final int? _id;
+  final int id;
 
   final EventChannel _readChannel;
   late StreamSubscription<Uint8List> _readStreamSubscription;
@@ -38,8 +38,8 @@ class BluetoothConnection {
   /// Describes is stream connected.
   bool get isConnected => output.isConnected;
 
-  BluetoothConnection._consumeConnectionID(int? id)
-      : this._id = id,
+  BluetoothConnection._consumeConnectionID(int id)
+      : this.id = id,
         this._readChannel =
             EventChannel('${FlutterBluetoothSerial.namespace}/read/$id') {
     _readStreamController = StreamController<Uint8List>();
@@ -85,7 +85,7 @@ class BluetoothConnection {
 
   /// Closes connection (rather gracefully), in result should also disconnect.
   Future<void> finish() async {
-    await FlutterBluetoothSerial._methodChannel.invokeMethod("close",{"id":_id});
+    await FlutterBluetoothSerial._methodChannel.invokeMethod("close",{"id":id});
     await output.allSent;
     close();
   }
@@ -93,7 +93,7 @@ class BluetoothConnection {
 
 /// Helper class for sending responses.
 class _BluetoothStreamSink<Uint8List> extends StreamSink<Uint8List> {
-  final int? _id;
+  final int id;
 
   /// Describes is stream connected.
   bool isConnected = true;
@@ -106,7 +106,7 @@ class _BluetoothStreamSink<Uint8List> extends StreamSink<Uint8List> {
   /// Exception to be returend from `done` Future, passed from `add` function or related.
   dynamic exception;
 
-  _BluetoothStreamSink(this._id) {
+  _BluetoothStreamSink(this.id) {
     // `_doneFuture` must be initialized here because `close` must return the same future.
     // If it would be in `done` get body, it would result in creating new futures every call.
     _doneFuture = Future(() async {

@@ -1102,7 +1102,6 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                             activity.runOnUiThread(() -> result.error("write_error", ex.getMessage(), exceptionToString(ex)));
                         }
                     });
-                    result.success(null);
                     break ;
                 }
 

@@ -314,6 +314,12 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
         };
 
     }
+    // 融家pda相关
+    private MethodChannel scanCodeChannel;
+    // 融家pda扫码事件名称
+    private static final String ACTION_DATA_CODE_RECEIVED = "nlscan.action.SCANNER_RESULT";
+    // 事件名称
+    private static final String CHARGING_CHANNEL = "newBland_scan";
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
@@ -373,6 +379,46 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
             }
         };
         discoveryChannel.setStreamHandler(discoveryStreamHandler);
+
+        EventChannel eventChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), CHARGING_CHANNEL);
+        eventChannel.setStreamHandler(new EventChannel.StreamHandler() {
+
+            private BroadcastReceiver broadcastReceiver;
+
+            @Override
+            public void onListen(Object arguments, EventChannel.EventSink events) {
+                broadcastReceiver = createChargingStateChangeReceiver(events);
+                IntentFilter filter = new IntentFilter();
+                filter.addAction(ACTION_DATA_CODE_RECEIVED);
+                applicationContext.registerReceiver(broadcastReceiver, filter);
+            }
+
+            @Override
+            public void onCancel(Object arguments) {
+                applicationContext.unregisterReceiver(broadcastReceiver);
+                broadcastReceiver = null;
+            }
+        });
+
+    }
+
+    private BroadcastReceiver createChargingStateChangeReceiver(final EventChannel.EventSink events) {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final String scanResult_1 = intent.getStringExtra("SCAN_BARCODE1");
+//                final String scanResult_2 = intent.getStringExtra("SCAN_BARCODE2");
+//                final int barcodeType = intent.getIntExtra("SCAN_BARCODE_TYPE", -1); // -1:unknown
+                final String scanStatus = intent.getStringExtra("SCAN_STATE");
+                if ("ok".equals(scanStatus)) {
+                    Log.d(TAG, "扫描的内容为" + scanResult_1);
+                    events.success(scanResult_1);
+                } else {
+                    Log.d(TAG, "扫描失败");
+                    events.success("");
+                }
+            }
+        };
     }
 
     @Override

@@ -390,12 +390,12 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                 broadcastReceiver = createChargingStateChangeReceiver(events);
                 IntentFilter filter = new IntentFilter();
                 filter.addAction(ACTION_DATA_CODE_RECEIVED);
-                applicationContext.registerReceiver(broadcastReceiver, filter);
+                activeContext.registerReceiver(broadcastReceiver, filter);
             }
 
             @Override
             public void onCancel(Object arguments) {
-                applicationContext.unregisterReceiver(broadcastReceiver);
+                activeContext.unregisterReceiver(broadcastReceiver);
                 broadcastReceiver = null;
             }
         });

@@ -380,7 +380,7 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
         };
         discoveryChannel.setStreamHandler(discoveryStreamHandler);
 
-        EventChannel eventChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), CHARGING_CHANNEL);
+        EventChannel eventChannel = new EventChannel(binding.getBinaryMessenger(), CHARGING_CHANNEL);
         eventChannel.setStreamHandler(new EventChannel.StreamHandler() {
 
             private BroadcastReceiver broadcastReceiver;

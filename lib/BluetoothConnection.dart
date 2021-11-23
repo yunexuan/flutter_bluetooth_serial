@@ -141,7 +141,7 @@ class _BluetoothStreamSink<Uint8List> extends StreamSink<Uint8List> {
       }
 
       await FlutterBluetoothSerial._methodChannel
-          .invokeMethod('write', {'id': _id, 'bytes': data});
+          .invokeMethod('write', {'id': id, 'bytes': data});
     }).catchError((e) {
       this.exception = e;
       close();

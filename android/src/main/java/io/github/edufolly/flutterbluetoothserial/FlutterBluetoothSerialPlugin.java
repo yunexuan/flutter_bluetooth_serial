@@ -1048,8 +1048,8 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                     int id = ++lastConnectionId;
                     BluetoothConnectionWrapper connection = new BluetoothConnectionWrapper(id, bluetoothAdapter);
                     connections.put(id, connection);
-                    ReadThread readThread = new ReadThread(connection);
-                    readThreadConcurrentHashMap.put(id,readThread);
+//                    ReadThread readThread = new ReadThread(connection);
+//                    readThreadConcurrentHashMap.put(id,readThread);
                     Log.d(TAG, "Connecting to " + address + " (id: " + id + ")");
 
                     AsyncTask.execute(() -> {
@@ -1061,7 +1061,7 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                             connections.remove(id);
                         }
                     });
-                    readThread.start();
+//                    readThread.start();
                     break;
                 }
 
@@ -1097,11 +1097,11 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                         });
                     } else if (call.hasArgument("bytes")) {
                         byte[] bytes = call.argument("bytes");
-                        byte[] byte1 = getPirntMessage(HexString2Bytes(new String(bytes)));
-                        byte[] bytes2 = hexStringToByteArray(byteArrayToHexString(byte1));
+//                        byte[] byte1 = getPirntMessage(HexString2Bytes(new String(bytes)));
+//                        byte[] bytes2 = hexStringToByteArray(byteArrayToHexString(byte1));
                         AsyncTask.execute(() -> {
                             try {
-                                connection.write(bytes2);
+                                connection.write(bytes);
                                 activity.runOnUiThread(() -> result.success(null));
                             } catch (Exception ex) {
                                 activity.runOnUiThread(() -> result.error("write_error", ex.getMessage(), exceptionToString(ex)));
@@ -1121,9 +1121,9 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                 case "close" :{
                     Log.d(TAG, "蓝牙关闭成功！");
                     int id = call.argument("id");
-                    ReadThread readThread = readThreadConcurrentHashMap.get(id);
-                    readThread.isLoop = false;
-                    readThreadConcurrentHashMap.remove(id);
+//                    ReadThread readThread = readThreadConcurrentHashMap.get(id);
+//                    readThread.isLoop = false;
+//                    readThreadConcurrentHashMap.remove(id);
                     try {
                         Thread.sleep(250);
                     } catch (Exception e) {
@@ -1139,7 +1139,8 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                         result.error("invalid_argument", "there is no connection with provided id", null);
                         break;
                     }
-                    byte[] bytes1 = HexString2Bytes("AA558100000106BB66");
+//                    byte[] bytes1 = HexString2Bytes("AA558100000106BB66");
+                    byte[] bytes1 = "z".getBytes();
                     AsyncTask.execute(() -> {
                         try {
                             connection.write(bytes1);

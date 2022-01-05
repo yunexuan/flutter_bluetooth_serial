@@ -7,9 +7,9 @@ import 'package:flutter/services.dart';
 class ScanCodeEventUtil {
   ScanCodeEventUtil._();
 
-  factory ScanCodeEventUtil() => ScanCodeEventUtil._();
+  static final ScanCodeEventUtil _instance = ScanCodeEventUtil._();
 
-  static ScanCodeEventUtil get instance => ScanCodeEventUtil._();
+  static ScanCodeEventUtil get instance => _instance;
 
   EventChannel eventChannel = const EventChannel('newBland_scan');
 
